@@ -1,0 +1,127 @@
+project(
+  'openlibm',
+  'c',
+  version : '0.8.7-taisei',
+  meson_version : '>= 1.3.0',
+  default_options : [
+    'warning_level=0',
+    'c_std=c99',
+  ],
+)
+
+cc = meson.get_compiler('c')
+
+c_args = cc.get_supported_arguments(
+  '-Wall',
+  '-ffp-contract=off',
+  '-fno-fast-math',
+  '-fno-rounding-math',
+  '-fno-math-errno',
+  '-fno-builtin',
+  '-fno-strict-aliasing',
+  '-ffp-exception-behavior=strict',
+  '-fno-gnu89-inline',
+)
+
+c_args += [
+  '-DASSEMBLER',
+  '-D__BSD_VISIBLE',
+]
+
+subdirs = [
+  'aarch64',
+  'amd64',
+  'arm',
+  'bsdsrc',
+  'i387',
+  'ld128',
+  'ld80',
+  'loongarch64',
+  'mips',
+  'powerpc',
+  'riscv64',
+  's390',
+  'src',
+  'wasm32',
+]
+
+foreach dir : subdirs
+  subdir(dir)
+endforeach
+
+arch_subdir_map = {
+  'x86_64'  : 'amd64',
+  'x86'     : 'i387',
+  'ppc'     : 'powerpc',
+}
+
+arch = host_machine.cpu_family()
+arch_subdir = arch_subdir_map.get(arch, arch)
+arch_src_var = f'src_@arch_subdir@'
+
+c_args += cc.get_supported_arguments({
+  'x86_64'  : ['-m64', '-msse2', '-mfpmath=sse'],
+  'x86'     : ['-march=i686', '-m32', '-msse2', '-mfpmath=sse'],
+}.get(arch, []))
+
+# Trick to thwart unneeded dllimport/dllexport and visibility("default") attributes
+# Avoids warnings and lets unneeded functions be DCE'd from the executable even with --whole-arcive
+public_c_args = ['-DOPENLIBM_DEFS_H_', '-DOLM_DLLEXPORT=']
+c_args += public_c_args
+
+if is_variable(arch_src_var)
+  src = get_variable(arch_src_var, [])
+else
+  src = []
+  warning(f'No arch subdir for @arch@; fenv won\'t work')
+endif
+
+long_double_mdig = cc.get_define('LDBL_MANT_DIG', prefix : '#include <float.h>')
+
+include_public = include_directories('include', 'src')
+include_private = [include_public]
+
+src += {
+  '64'  : src_ld80,
+  '113' : src_ld128,
+}.get(long_double_mdig, [])
+
+include_private += {
+  '64'  : include_directories('ld80'),
+  '113' : include_directories('ld128'),
+}.get(long_double_mdig, [])
+
+include_private += include_directories(arch_subdir)
+
+src += src_main
+src += src_bsdsrc
+
+filtered_src_stems = []
+filtered_src = []
+
+fs = import('fs')
+
+foreach f : src
+  stem = fs.stem(f)
+  if stem not in filtered_src_stems
+    filtered_src_stems += stem
+    filtered_src += f
+  endif
+endforeach
+
+openlibm_lib = static_library('openlibm', filtered_src,
+  install : false,
+  c_args : c_args,
+  gnu_symbol_visibility : 'hidden',
+  include_directories : include_private,
+)
+
+openlibm_dep = declare_dependency(
+  include_directories : include_public,
+  link_whole : openlibm_lib,
+  compile_args : public_c_args,
+)
+
+meson.override_dependency('openlibm', openlibm_dep)
+
+subdir('test')
