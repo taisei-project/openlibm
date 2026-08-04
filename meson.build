@@ -13,6 +13,7 @@ cc = meson.get_compiler('c')
 
 c_args = cc.get_supported_arguments(
   '-Wall',
+  '-Wno-unsupported-floating-point-opt',
   '-ffp-contract=off',
   '-fno-fast-math',
   '-fno-rounding-math',
@@ -68,14 +69,27 @@ c_args += cc.get_supported_arguments({
 public_c_args = ['-DOPENLIBM_DEFS_H_', '-DOLM_DLLEXPORT=']
 c_args += public_c_args
 
+have_fenv = true
+
 if is_variable(arch_src_var)
   src = get_variable(arch_src_var, [])
 else
   src = []
+  have_fenv = false
   warning(f'No arch subdir for @arch@; fenv won\'t work')
 endif
 
-long_double_mdig = cc.get_define('LDBL_MANT_DIG', prefix : '#include <float.h>')
+if host_machine.cpu_family() == 'wasm32'
+  have_fenv = false
+endif
+
+enable_long_double = true
+
+if host_machine.cpu_family() == 'wasm32'
+  enable_long_double = false
+endif
+
+long_double_mdig = enable_long_double ? cc.get_define('LDBL_MANT_DIG', prefix : '#include <float.h>') : '53'
 
 include_public = include_directories('include', 'src')
 include_private = [include_public]
@@ -125,4 +139,6 @@ openlibm_dep = declare_dependency(
 
 meson.override_dependency('openlibm', openlibm_dep)
 
-subdir('test')
+if host_machine.cpu_family() != 'wasm32'
+  subdir('test')
+endif
