@@ -20,6 +20,8 @@
 #include <openlibm_fenv_riscv.h>
 #elif defined(__loongarch64)
 #include <openlibm_fenv_loongarch64.h>
+#elif defined(__wasm__)
+// no fenv support here
 #else
 #error "Unsupported platform"
 #endif
