@@ -41,7 +41,6 @@ subdirs = [
   'powerpc',
   'riscv64',
   's390',
-  'src',
   'wasm32',
 ]
 
@@ -91,8 +90,10 @@ include_private += {
   '113' : include_directories('ld128'),
 }.get(long_double_mdig, [])
 
+long_double_is_double = long_double_mdig == '53'
 include_private += include_directories(arch_subdir)
 
+subdir('src')
 src += src_main
 src += src_bsdsrc
 
