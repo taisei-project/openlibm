@@ -36,8 +36,7 @@
 
 #include "math_private.h"
 
-#if !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__DragonFly__)
-static __inline int digittoint(int c) {
+static __inline int _digittoint(int c) {
 	if ('0' <= c && c <= '9')
 		return (c - '0');
 	else if ('A' <= c && c <= 'F')
@@ -46,7 +45,6 @@ static __inline int digittoint(int c) {
 		return (c - 'a' + 10);
 	return 0;
 }
-#endif
 
 
 /*
@@ -85,7 +83,7 @@ __scan_nan(u_int32_t *words, int num_words, const char *s)
 #endif
 		if (--si < 0)
 			break;
-		words[bitpos / 32] |= digittoint(s[si]) << (bitpos % 32);
+		words[bitpos / 32] |= _digittoint(s[si]) << (bitpos % 32);
 	}
 }
 
