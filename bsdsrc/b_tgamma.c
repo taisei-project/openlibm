@@ -123,9 +123,7 @@ static struct Double ratfun_gam(double, double);
 
 static const double zero = 0., one = 1.0, tiny = 1e-300;
 
-OLM_DLLEXPORT double
-tgamma(x)
-	double x;
+OLM_DLLEXPORT double tgamma(double x)
 {
 	struct Double u;
 
@@ -150,9 +148,7 @@ tgamma(x)
 /*
  * Accurate to max(ulp(1/128) absolute, 2^-66 relative) error.
  */
-static struct Double
-large_gam(x)
-	double x;
+static struct Double large_gam(double x)
 {
 	double z, p;
 	struct Double t, u, v;
@@ -179,9 +175,7 @@ large_gam(x)
  * Good to < 1 ulp.  (provably .90 ulp; .87 ulp on 1,000,000 runs.)
  * It also has correct monotonicity.
  */
-static double
-small_gam(x)
-	double x;
+static double small_gam(double x)
 {
 	double y, ym1, t;
 	struct Double yy, r;
@@ -213,9 +207,7 @@ small_gam(x)
 /*
  * Good on (0, 1+x0+LEFT].  Accurate to 1ulp.
  */
-static double
-smaller_gam(x)
-	double x;
+static double smaller_gam(double x)
 {
 	double t, d;
 	struct Double r, xx;
@@ -242,9 +234,7 @@ smaller_gam(x)
 /*
  * returns (z+c)^2 * P(z)/Q(z) + a0
  */
-static struct Double
-ratfun_gam(z, c)
-	double z, c;
+static struct Double ratfun_gam(double z, double c)
 {
 	double p, q;
 	struct Double r, t;
@@ -269,9 +259,7 @@ ratfun_gam(z, c)
 	return (r);			/* r = a0 + t */
 }
 
-static double
-neg_gam(x)
-	double x;
+static double neg_gam(double x)
 {
 	int sgn = 1;
 	struct Double lg, lsine;

@@ -27,6 +27,7 @@ c_args = cc.get_supported_arguments(
 c_args += [
   '-DASSEMBLER',
   '-D__BSD_VISIBLE',
+  '-D_ANSI_SOURCE',
 ]
 
 subdirs = [
