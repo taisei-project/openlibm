@@ -115,11 +115,11 @@ extern const union __nan_un {
     : __isfinitel(x))
 #define	isinf(x)					\
     ((sizeof (x) == sizeof (float)) ? __isinff(x)	\
-    : (sizeof (x) == sizeof (double)) ? isinf(x)	\
+    : (sizeof (x) == sizeof (double)) ? (isinf)(x)	\
     : __isinfl(x))
 #define	isnan(x)					\
     ((sizeof (x) == sizeof (float)) ? __isnanf(x)	\
-    : (sizeof (x) == sizeof (double)) ? isnan(x)	\
+    : (sizeof (x) == sizeof (double)) ? (isnan)(x)	\
     : __isnanl(x))
 #define	isnormal(x)					\
     ((sizeof (x) == sizeof (float)) ? __isnormalf(x)	\
