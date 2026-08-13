@@ -15,7 +15,7 @@ ENTRY(scalbn)
 	ret
 END(scalbn)
 
-.globl CNAME(ldexp)
+.globl CNAME(ldexp); VISIBILITY(ldexp)
 .set   CNAME(ldexp),CNAME(scalbn)
 /* Enable stack protection */
 #if defined(__ELF__)

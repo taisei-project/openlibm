@@ -41,12 +41,7 @@ ENTRY(scalbnf)
 	fstps	-8(%rsp)
 	movss	-8(%rsp),%xmm0
 	ret
-#ifndef _WIN64
-END(scalbnf)
-.globl CNAME(ldexpf)
-#else
-.globl CNAME(ldexpf); .section .drectve; .ascii " -export:ldexpf"
-#endif
+.globl CNAME(ldexpf); VISIBILITY(ldexpf)
 .set   CNAME(ldexpf),CNAME(scalbnf)
 
 /* Enable stack protection */

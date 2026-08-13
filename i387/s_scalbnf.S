@@ -16,10 +16,10 @@ ENTRY(scalbnf)
 	ret
 END(scalbnf)
 
-.globl CNAME(ldexpf)
+.globl CNAME(ldexpf); VISIBILITY(ldexpf)
 .set	CNAME(ldexpf),CNAME(scalbnf)
 
-	
+
 /* Enable stack protection */
 #if defined(__ELF__)
 .section .note.GNU-stack,"",%progbits

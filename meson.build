@@ -28,6 +28,7 @@ c_args += [
   '-DASSEMBLER',
   '-D__BSD_VISIBLE',
   '-D_ANSI_SOURCE',
+  '-DOLM_TAISEI_NO_EXPORT',
 ]
 
 subdirs = [

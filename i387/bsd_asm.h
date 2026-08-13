@@ -36,6 +36,8 @@
 #ifndef _MACHINE_ASM_H_
 #define	_MACHINE_ASM_H_
 
+#include "taisei_asm.h"  // for VISIBILITY(x)
+
 #if defined(__APPLE__)
 #include "osx_asm.h"
 #define CNAME(x) EXT(x)
@@ -76,7 +78,8 @@
 #define CNAME(csym)		csym
 #define HIDENAME(asmsym)	.asmsym
 #define _ENTRY(x) .text; _START_ENTRY; \
-			.globl CNAME(x); .type CNAME(x),@function; CNAME(x):
+			.globl CNAME(x); VISIBILITY(x) \
+			.type CNAME(x),@function; CNAME(x):
 #define	END(x)		.size x, . - x
 #elif defined(_WIN32)
 #ifndef _MSC_VER
@@ -89,7 +92,7 @@
 #define CNAME(csym)		_##csym
 #define HIDENAME(asmsym)	.asmsym
 #define _ENTRY(x) _START_ENTRY_WIN; \
-            .globl CNAME(x); .section .drectve; .ascii " -export:", #x; \
+            .globl CNAME(x); VISIBILITY(x) \
             .section .text; .def CNAME(x); .scl 2; .type 32; .endef; CNAME(x):
 #endif
 

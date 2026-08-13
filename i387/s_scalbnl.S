@@ -16,10 +16,10 @@ ENTRY(scalbnl)
 	ret
 END(scalbnl)
 
-.globl CNAME(ldexpl)
+.globl CNAME(ldexpl); VISIBILITY(ldexpl)
 .set	CNAME(ldexpl),CNAME(scalbnl)
 
-	
+
 /* Enable stack protection */
 #if defined(__ELF__)
 .section .note.GNU-stack,"",%progbits

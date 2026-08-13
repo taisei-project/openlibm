@@ -41,12 +41,7 @@ ENTRY(scalbn)
 	fstpl	-8(%rsp)
 	movsd	-8(%rsp),%xmm0
 	ret
-#ifndef _WIN64
-END(scalbn)
-.globl CNAME(ldexp)
-#else
-.globl CNAME(ldexp); .section .drectve; .ascii " -export:ldexp"
-#endif
+.globl CNAME(ldexp); VISIBILITY(ldexp)
 .set   CNAME(ldexp),CNAME(scalbn)
 
 /* Enable stack protection */

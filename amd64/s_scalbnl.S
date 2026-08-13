@@ -26,12 +26,7 @@ ENTRY(scalbnl)
     fstpt   (%rcx)
 #endif
 	ret
-#ifndef _WIN64
-END(scalbnl)
-.globl CNAME(ldexpl)
-#else
-.globl CNAME(ldexpl); .section .drectve; .ascii " -export:ldexpl"
-#endif
+.globl CNAME(ldexpl); VISIBILITY(ldexpl)
 .set   CNAME(ldexpl),CNAME(scalbnl)
 
 /* Enable stack protection */
