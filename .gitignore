@@ -5,6 +5,7 @@
 *.so*
 *.dylib*
 *.pc
+.cache
 
 # code coverage
 openlibm-test
