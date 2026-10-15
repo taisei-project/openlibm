@@ -1,7 +1,7 @@
 project(
   'openlibm',
   'c',
-  version : '0.8.7-taisei',
+  version : '0.8.8-taisei',
   meson_version : '>= 1.3.0',
   default_options : [
     'warning_level=0',
