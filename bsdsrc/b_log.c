@@ -352,11 +352,7 @@ static double logF_tail[N+1] = {
 
 #if 0
 OLM_DLLEXPORT double
-#ifdef _ANSI_SOURCE
 log(double x)
-#else
-log(x) double x;
-#endif
 {
 	int m, j;
 	double F, f, g, q, u, u2, v, zero = 0.0, one = 1.0;
@@ -421,11 +417,7 @@ log(x) double x;
  * log(x) = a+b to 63 bits, with a rounded to 26 bits.
  */
 struct Double
-#ifdef _ANSI_SOURCE
 __log__D(double x)
-#else
-__log__D(x) double x;
-#endif
 {
 	int m, j;
 	double F, f, g, q, u, v, u2;
